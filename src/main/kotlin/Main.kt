@@ -1,6 +1,6 @@
 val recetas:List<String> = listOf<String>("Agua", "Leche", "Carne", "Verduras", "Frutas", "Cereal", "Huevos", "Aceite")
 val recetasSeleccionadas:ArrayList<String> = ArrayList()
-val mensajeErrorEntrada:String = "Porfavor seleccione la opción correcta"
+val mensajeErrorEntrada = {println("Porfavor seleccione la opción correcta")}
 
 fun main() {
     val menu = """:: Bienvenido a Recipe Maker ::
@@ -15,37 +15,43 @@ fun main() {
         println(menu);
         opcion = readLine()!!?.toInt() ?: 0
         when(opcion){
-            1 -> hacerReceta()
-            2 -> mostrarReceta()
+            1 -> makeRecipe()
+            2 -> viewRecipe()
             3 -> println("\nHasta luego!!")
-            else -> println(mensajeErrorEntrada)
+            else -> mensajeErrorEntrada()
         }
     }while(opcion != 3)
 }
 
-fun hacerReceta() {
+fun makeRecipe() {
     println()
     println()
     println()
     println(": Hacer una receta :");
     do{
-        println("Porfavor seleccione las siguientes recetas")
+        println("Selecciona por categoría el ingrediente que buscas")
 
         //Imprime la lista de recetas a seleccionar
         println("0. Regresar")
         for ((indice, receta) in recetas.withIndex()) {
             println("${indice.plus(1)}. $receta")
         }
-        var seleccion:Int = readLine()!!?.toInt() ?: 0
-        when(seleccion){
-            0 -> println("Regresando...")
-            in 1..recetas.size -> recetasSeleccionadas.add(recetas[seleccion.minus(1)]);
-            else -> println(mensajeErrorEntrada)
-        }
+
+        var seleccion:Int?
+        do{
+            var detener = false
+            seleccion = readLine()!!?.toInt() ?: recetas.size
+            when(seleccion){
+                0 -> println("Regresando...")
+                in 1..recetas.size -> recetasSeleccionadas.add(recetas[seleccion.minus(1)]);
+                else ->{mensajeErrorEntrada()
+                    detener = true}
+            }
+        }while (detener)
     }while (seleccion != 0)
 }
 
-fun mostrarReceta(){
+fun viewRecipe(){
     if(recetasSeleccionadas.size == 0){
         return;
     }
